@@ -12,7 +12,6 @@ from web3 import Account
 from web3 import middleware
 from web3.gas_strategies.time_based import medium_gas_price_strategy
 from web3 import Web3
-
 w3 = Web3(Web3.HTTPProvider('http://127.0.0.1:7545'))
 ################################################################################
 
@@ -34,41 +33,3 @@ def generate_account(w3):
 
     # Return the account from the function
     return account
-
-# @TODO
-# Create a function called `get_balance`, it should convert the wei balance of the account to ether, and returns the value of ether
-
-def get_balance(w3, address):
-    
-    wei_balance = w3.eth.get_balance(address)
-    
-    ether = w3.fromWei(wei_balance, 'ether')
-    
-    return ether
-
-
-
-
-# @TODO
-# Create a function called `send_transaction` that creates a raw transaction, signs it, and sends it. Return the confirmation hash from the transaction.
-
-def send_transaction(w3, account, receiver, ether):
-    
-    w3.eth.setGasPriceStrategy(medium_gas_price_strategy)
-    
-    wei_value = w3.toWei(ether, "ether")
-    
-    gas_estimate = w3.eth.estimateGas({"to": receiver, "from": account.address, "value": wei_value})
-    
-    raw_tx = {
-        "to": receiver,
-        "from": account.address,
-        "value": wei_value,
-        "gas": gas_estimate,
-        "gasPrice": 0,
-        "nonce": w3.eth.getTransactionCount(account.address)
-    }
-    
-    signed_tx = account.signTransaction(raw_tx)
-
-    return w3.eth.sendRawTransaction(signed_tx.rawTransaction)
